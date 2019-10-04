@@ -22,13 +22,24 @@ Execute(Get custom initialization dict):
   \ {'project_file': 'some_file_name'},
   \ ale_linters#vhdl#hdl_checker#GetInitOptions(bufnr(''))
 
+Execute(Get the checker command without extra user parameters):
+  AssertEqual
+  \ 'hdl_checker --lsp',
+  \ ale_linters#vhdl#hdl_checker#GetCommand(bufnr(''))
+
+Execute(Get the checker command with user configured parameters):
+  let g:ale_hdl_checker_extra_args = '--log-level DEBUG'
+  AssertEqual
+  \ 'hdl_checker --lsp --log-level DEBUG',
+  \ ale_linters#vhdl#hdl_checker#GetCommand(bufnr(''))
+
 Execute(Get project root based on .git):
   call ale#test#SetFilename('hdl_server/with_git/files/foo.vhd')
   AssertEqual
   \ g:dir . '/hdl_server/with_git',
   \ ale_linters#vhdl#hdl_checker#GetProjectRoot(bufnr(''))
 
-Execute(Get project root based on .git):
+Execute(Get project root based on config file):
   call ale#test#SetFilename('hdl_server/with_config_file/foo.vhd')
   AssertEqual
   \ g:dir . '/hdl_server/with_config_file',
